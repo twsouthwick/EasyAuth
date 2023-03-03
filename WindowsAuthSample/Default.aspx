@@ -10,6 +10,8 @@
         </section>
 
         <div class="row">
+            <ul>
+            </ul>
             <section class="col-md-4" aria-labelledby="gettingStartedTitle">
                 <h2 id="gettingStartedTitle">Getting started</h2>
                 <p>

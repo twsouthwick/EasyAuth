@@ -11,7 +11,7 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
 </head>
@@ -49,11 +49,32 @@
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
                     </ul>
-                    <p class="navbar-text navbar-right">Hello, <asp:LoginName runat="server" />!</p>
+                    <p class="navbar-text navbar-right">Hello,
+                        <asp:LoginName runat="server" />
+                        ! (<%= Context.User.Identity.AuthenticationType %></p>
                 </div>
             </div>
         </nav>
         <div class="container body-content">
+            <table>
+                <tr>
+                    <td>Type</td>
+                    <td>Value</td>
+                    <td>Subject</td>
+                    <td>ValueType</td>
+                </tr>
+                 <% foreach (var claim in ((System.Security.Claims.ClaimsPrincipal)Context.User).Claims)
+                    { %>
+                <tr>
+                    <td><%= claim.Type %></td>
+                    <td><%= claim.Value %></td>
+                    <td><%= claim.Subject %></td>
+                    <td><%= claim.ValueType %></td>
+                </tr>
+                <% } %>
+            </table>
+               
+            <hr />
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
             <hr />
@@ -64,6 +85,7 @@
     </form>
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/Scripts/bootstrap.js") %>
-    </asp:PlaceHolder></body>
+    </asp:PlaceHolder>
+</body>
 </body>
 </html>
