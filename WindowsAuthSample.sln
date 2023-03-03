@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsAuthSample", "WindowsAuthSample\WindowsAuthSample.csproj", "{09DD9F94-D881-40EA-8AD1-BF1A99E81C3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAuthorization", "EasyAuthorization\EasyAuthorization.csproj", "{4280EA1D-BCA2-43FB-B810-96067F521D3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAuthorization", "EasyAuthorization\EasyAuthorization.csproj", "{4280EA1D-BCA2-43FB-B810-96067F521D3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
