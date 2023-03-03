@@ -51,7 +51,8 @@
                     </ul>
                     <p class="navbar-text navbar-right">Hello,
                         <asp:LoginName runat="server" />
-                        ! (<%= Context.User.Identity.AuthenticationType %></p>
+                        ! (<%= Context.User.Identity.AuthenticationType %>)
+                    </p>
                 </div>
             </div>
         </nav>
