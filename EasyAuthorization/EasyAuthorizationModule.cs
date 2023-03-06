@@ -15,15 +15,18 @@ internal sealed class EasyAuthorizationModule : IHttpModule
 
     public void Init(HttpApplication context)
     {
-        var roles = Array.Empty<string>();
-
-        if (ConfigurationManager.GetSection("easyAuth") is EasyAuthorizationConfigurationSection section)
+        if (ConfigurationManager.GetSection("easyAuth") is EasyAuthorizationConfigurationSection { IsEnabled: true, Allow.Roles: { } roleString, Type: { } roleType })
         {
-            roles = section.Allow.Roles.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-        }
+            var roles = roleString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-        context.PostAuthenticateRequest += (s, e) => RewriteEasyAuthRoleClaimType(((HttpApplication)s).Context);
-        context.AuthorizeRequest += (s, e) => AuthorizeRequest(((HttpApplication)s).Context, roles);
+            // EasyAuth uses this as their claim type, which does not match the ClaimsIdentity.RoleClaimType for AAD 
+            const string EasyAuthRolesClaimType = "roles";
+            const string EasyAuthGroupClaimType = "groups";
+            var roleClaimType = roleType == RoleType.Groups ? EasyAuthGroupClaimType : EasyAuthRolesClaimType;
+
+            context.PostAuthenticateRequest += (s, e) => TransformEasyAuthClaim(((HttpApplication)s).Context, roleClaimType);
+            context.AuthorizeRequest += (s, e) => AuthorizeRequest(((HttpApplication)s).Context, roles);
+        }
     }
 
     private void AuthorizeRequest(HttpContext context, string[] roles)
@@ -49,10 +52,8 @@ internal sealed class EasyAuthorizationModule : IHttpModule
     }
 
     // This will replace the HttpContext.User with an updated one with the EasyAuth roles claim type if an identity exists that came from EasyAuth
-    private void RewriteEasyAuthRoleClaimType(HttpContext context)
+    private void TransformEasyAuthClaim(HttpContext context, string claimTypeToTransform)
     {
-        // EasyAuth uses this as their claim type, which does not match the ClaimsIdentity.RoleClaimType for AAD 
-        const string EasyAuthRolesClaimType = "roles";
         const string AzureAdIdentityType = "aad";
 
         if (context.User is ClaimsPrincipal principal)
@@ -64,7 +65,7 @@ internal sealed class EasyAuthorizationModule : IHttpModule
             {
                 if (string.Equals(AzureAdIdentityType, identity.AuthenticationType, StringComparison.Ordinal))
                 {
-                    var newIdentity = new ClaimsIdentity(identity, null, identity.AuthenticationType, identity.NameClaimType, EasyAuthRolesClaimType);
+                    var newIdentity = new ClaimsIdentity(identity, null, identity.AuthenticationType, identity.NameClaimType, claimTypeToTransform);
                     newPrincipal.AddIdentity(newIdentity);
                     hasEasyAuth = true;
                 }
