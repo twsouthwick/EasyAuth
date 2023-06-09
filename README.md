@@ -19,13 +19,11 @@ The main driver of this example is a .NET Framework application that is using th
 </configuration>
 ```
 
-With that simple statement, many applications were able to lock down access to only certain users or roles (i.e. security groups). When moving to Azure, the authentication piece can be replaced with EasyAuth, but there is no easy way to replace the authorization node. Enter, this project.
+With that simple statement, many applications were able to lock down access to only certain users or roles (i.e. security groups). When moving to Azure, the authentication piece can be replaced with EasyAuth, but there is no easy way to replace the authorization node.
 
-## EasyAuthorization
+Enter, this project.
 
-This project contains a sample of a POC to enable authorization based on security groups (which could be extended to users). Currently, this only supports the scenarios that EasyAuth itself supports:
-
-- 
+This project contains a sample of a POC to enable authorization based on security groups (which could be extended to users). This uses group claims in AAD, which has some limitations; please refer to the [docs](https://learn.microsoft.com/azure/active-directory/develop/optional-claims) for the most current information.
 
 ## Try it out
 
